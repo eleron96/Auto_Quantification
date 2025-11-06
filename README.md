@@ -25,9 +25,16 @@ Autodesk University session (Russian): https://youtu.be/FROfd0oOZe4
 
 If the command reports an error, inspect `%TEMP%\NW_QUNTIFICATION_LOG\FAIL_LOG_Navisworks_SearchsToQuantification.log` for details.
 
-## Building for other Navisworks versions
+## Building from source
 
-When building from source, adjust the `NavisworksInstallDir` property in `SearchSetsToQuantification2.csproj` so that the post-build step copies the add-in to the correct Navisworks installation folder.
+1. Install **Visual Studio 2022** (or newer) with the *.NET desktop development* workload so that MSBuild 17 and the .NET Framework 4.7.2 targeting pack are available.
+2. Clone this repository and open `SearchSetsToQuantification2.sln` in Visual Studio.
+3. Make sure **Navisworks Manage 2025** (or the version you target) is installed locally so the Autodesk API assemblies are present under `C:\Program Files\Autodesk\Navisworks Manage 2025`.
+4. If Navisworks is installed to a different folder, override the `NavisworksInstallDir` property either by editing `SearchSetsToQuantification2.csproj` or by passing `/p:NavisworksInstallDir="D:\Path\To\Navisworks\"` when building with MSBuild.
+5. Choose the **Debug_2025 | x64** configuration in Visual Studio. Press **Build → Build Solution**. The project compiles against the Navisworks API DLLs located in `$(NavisworksInstallDir)`.
+6. After a successful build, the post-build event copies the add-in to `$(NavisworksInstallDir)Plugins\SearchSetsToQuantification2\`. Restart Navisworks (or launch it with **F5**) to load the updated plugin.
+
+If the automatic copy fails because of permissions, build once to produce the binaries in `SearchSetsToQuantification2\bin\x64\Debug_2025\` and manually copy the DLL, XAML, and `Images` folder to `$(NavisworksInstallDir)Plugins\SearchSetsToQuantification2\`.
 
 ### Where do the Autodesk *.dll files come from?
 
